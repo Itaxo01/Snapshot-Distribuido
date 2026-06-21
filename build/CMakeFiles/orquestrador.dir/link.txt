@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/orquestrador.dir/src/orquestrador/main_orquestrador.cpp.o CMakeFiles/orquestrador.dir/src/orquestrador/topologia.cpp.o CMakeFiles/orquestrador.dir/src/orquestrador/spawner.cpp.o -o bin/orquestrador  librede.a 

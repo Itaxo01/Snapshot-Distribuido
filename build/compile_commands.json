@@ -1,0 +1,134 @@
+[
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/rede.dir/src/rede/protocolo.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/rede/protocolo.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/rede/protocolo.cpp",
+  "output": "CMakeFiles/rede.dir/src/rede/protocolo.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/rede.dir/src/rede/socket_tcp.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/rede/socket_tcp.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/rede/socket_tcp.cpp",
+  "output": "CMakeFiles/rede.dir/src/rede/socket_tcp.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/rede.dir/src/rede/canal.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/rede/canal.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/rede/canal.cpp",
+  "output": "CMakeFiles/rede.dir/src/rede/canal.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/rede.dir/src/rede/telemetria_udp.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/rede/telemetria_udp.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/rede/telemetria_udp.cpp",
+  "output": "CMakeFiles/rede.dir/src/rede/telemetria_udp.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/snapshot.dir/src/snapshot/chandy_lamport.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/snapshot/chandy_lamport.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/snapshot/chandy_lamport.cpp",
+  "output": "CMakeFiles/snapshot.dir/src/snapshot/chandy_lamport.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/entidade.dir/src/entidade/main_entidade.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/entidade/main_entidade.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/entidade/main_entidade.cpp",
+  "output": "CMakeFiles/entidade.dir/src/entidade/main_entidade.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/entidade.dir/src/entidade/worker.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/entidade/worker.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/entidade/worker.cpp",
+  "output": "CMakeFiles/entidade.dir/src/entidade/worker.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/entidade.dir/src/entidade/work_stealing.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/entidade/work_stealing.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/entidade/work_stealing.cpp",
+  "output": "CMakeFiles/entidade.dir/src/entidade/work_stealing.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/entidade.dir/src/entidade/controle.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/entidade/controle.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/entidade/controle.cpp",
+  "output": "CMakeFiles/entidade.dir/src/entidade/controle.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/orquestrador.dir/src/orquestrador/main_orquestrador.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/orquestrador/main_orquestrador.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/orquestrador/main_orquestrador.cpp",
+  "output": "CMakeFiles/orquestrador.dir/src/orquestrador/main_orquestrador.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/orquestrador.dir/src/orquestrador/topologia.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/orquestrador/topologia.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/orquestrador/topologia.cpp",
+  "output": "CMakeFiles/orquestrador.dir/src/orquestrador/topologia.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/orquestrador.dir/src/orquestrador/spawner.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/orquestrador/spawner.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/orquestrador/spawner.cpp",
+  "output": "CMakeFiles/orquestrador.dir/src/orquestrador/spawner.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/src/monitor/main_monitor.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/monitor/main_monitor.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/monitor/main_monitor.cpp",
+  "output": "CMakeFiles/monitor.dir/src/monitor/main_monitor.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/src/monitor/ui_imgui.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/monitor/ui_imgui.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/monitor/ui_imgui.cpp",
+  "output": "CMakeFiles/monitor.dir/src/monitor/ui_imgui.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/src/monitor/receptor_telemetria.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/monitor/receptor_telemetria.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/monitor/receptor_telemetria.cpp",
+  "output": "CMakeFiles/monitor.dir/src/monitor/receptor_telemetria.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/src/monitor/coletor_snapshot.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/monitor/coletor_snapshot.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src/monitor/coletor_snapshot.cpp",
+  "output": "CMakeFiles/monitor.dir/src/monitor/coletor_snapshot.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/imgui/imgui.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/imgui.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/imgui.cpp",
+  "output": "CMakeFiles/monitor.dir/imgui/imgui.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/imgui/imgui_draw.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/imgui_draw.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/imgui_draw.cpp",
+  "output": "CMakeFiles/monitor.dir/imgui/imgui_draw.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/imgui/imgui_tables.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/imgui_tables.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/imgui_tables.cpp",
+  "output": "CMakeFiles/monitor.dir/imgui/imgui_tables.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/imgui/imgui_widgets.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/imgui_widgets.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/imgui_widgets.cpp",
+  "output": "CMakeFiles/monitor.dir/imgui/imgui_widgets.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/imgui/backends/imgui_impl_glfw.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends/imgui_impl_glfw.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends/imgui_impl_glfw.cpp",
+  "output": "CMakeFiles/monitor.dir/imgui/backends/imgui_impl_glfw.cpp.o"
+},
+{
+  "directory": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build",
+  "command": "/usr/bin/c++  -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends -I/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/src -std=gnu++17 -o CMakeFiles/monitor.dir/imgui/backends/imgui_impl_opengl3.cpp.o -c /home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends/imgui_impl_opengl3.cpp",
+  "file": "/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/imgui/backends/imgui_impl_opengl3.cpp",
+  "output": "CMakeFiles/monitor.dir/imgui/backends/imgui_impl_opengl3.cpp.o"
+}
+]

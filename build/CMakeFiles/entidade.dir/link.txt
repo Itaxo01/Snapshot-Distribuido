@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/entidade.dir/src/entidade/main_entidade.cpp.o CMakeFiles/entidade.dir/src/entidade/worker.cpp.o CMakeFiles/entidade.dir/src/entidade/work_stealing.cpp.o CMakeFiles/entidade.dir/src/entidade/controle.cpp.o -o bin/entidade  libsnapshot.a librede.a 

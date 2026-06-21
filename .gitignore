@@ -1,0 +1,12 @@
+# Artefatos de build / ferramentas
+/build/
+/compile_commands.json
+.cache/
+
+# Gerados em tempo de execucao
+/cluster.json
+/imgui.ini
+/snapshots/*
+!/snapshots/.gitkeep
+requisitos.md
+*.pdf

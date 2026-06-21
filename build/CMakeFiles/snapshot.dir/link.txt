@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsnapshot.a CMakeFiles/snapshot.dir/src/snapshot/chandy_lamport.cpp.o
+/usr/bin/ranlib libsnapshot.a

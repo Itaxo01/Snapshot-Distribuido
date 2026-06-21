@@ -1,0 +1,2 @@
+/usr/bin/ar qc librede.a CMakeFiles/rede.dir/src/rede/protocolo.cpp.o CMakeFiles/rede.dir/src/rede/socket_tcp.cpp.o CMakeFiles/rede.dir/src/rede/canal.cpp.o CMakeFiles/rede.dir/src/rede/telemetria_udp.cpp.o
+/usr/bin/ranlib librede.a

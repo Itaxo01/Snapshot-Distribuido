@@ -1,0 +1,7 @@
+/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build/CMakeFiles/rede.dir
+/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build/CMakeFiles/snapshot.dir
+/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build/CMakeFiles/entidade.dir
+/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build/CMakeFiles/orquestrador.dir
+/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build/CMakeFiles/monitor.dir
+/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build/CMakeFiles/edit_cache.dir
+/home/kauanfank/codes/Faculdade/ComputacaoDistribuida/trabalho2/build/CMakeFiles/rebuild_cache.dir
