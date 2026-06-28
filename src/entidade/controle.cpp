@@ -46,9 +46,13 @@ void Controle::laco() {
         while (!parado_.load(std::memory_order_relaxed)) {
             std::optional<rede::Buffer> corpo = rede::receber_frame(fd_conexao_.load());
             if (!corpo) break;  // Monitor fechou
-            if (rede::tipo_de(*corpo) == rede::TipoMsg::INICIAR_SNAPSHOT) {
+            auto t = rede::tipo_de(*corpo);
+            if (t == rede::TipoMsg::INICIAR_SNAPSHOT) {
                 if (auto m = rede::parse_iniciar_snapshot(*corpo))
-                    comandos_.push(Comando{Comando::Tipo::INICIAR_SNAPSHOT, m->snapshot_id});
+                    comandos_.push(Comando{Comando::Tipo::INICIAR_SNAPSHOT, m->snapshot_id, 0});
+            } else if (t == rede::TipoMsg::ATRIBUIR_TAREFAS) {
+                if (auto m = rede::parse_atribuir_tarefas(*corpo))
+                    comandos_.push(Comando{Comando::Tipo::ATRIBUIR_TAREFAS, 0, m->quantidade});
             }
         }
     } catch (const rede::ErroRede&) {

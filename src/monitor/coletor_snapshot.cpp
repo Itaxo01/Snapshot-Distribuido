@@ -43,8 +43,8 @@ PecaColetada ler_peca(const std::string& caminho, bool& ok) {
 
 }  // namespace
 
-Coletor::Coletor(std::vector<EndpointCtrl> workers, comum::Contagem total)
-    : workers_(std::move(workers)), total_(total) {
+Coletor::Coletor(std::vector<EndpointCtrl> workers)
+    : workers_(std::move(workers)) {
     // Semeia o contador de seq com o tempo atual (epoch em segundos) para que os
     // ids desta sessao nao colidam com pastas de execucoes anteriores -- a parte
     // alta do SnapshotId e o iniciador, entao so a seq precisa ser unica no tempo.
@@ -102,6 +102,32 @@ comum::SnapshotId Coletor::disparar(comum::NodeId iniciador) {
     return sid;
 }
 
+// Total de referencia para um snapshot: se a pasta ja tem final_snapshot.json
+// (ex.: execucao anterior), usa o total persistido nele -- assim os snapshots de
+// "Anteriores" mantem o total com que foram capturados, imunes a injecoes desta
+// sessao. Caso contrario (snapshot novo), usa o total injetado ao vivo.
+long long Coletor::total_referencia(const std::string& dir) const {
+    auto v = comum::json::parse(ler_arquivo(dir + "/final_snapshot.json"));
+    if (v)
+        if (auto* x = v->campo("total"))
+            return x->inteiro();
+    return static_cast<long long>(total_.load(std::memory_order_relaxed));
+}
+
+bool Coletor::atribuir_tarefas(comum::NodeId alvo, comum::Contagem quantidade) {
+    int idx = indice_de(alvo);
+    if (idx < 0 || quantidade == 0) return false;
+    try {
+        rede::enviar_frame(conns_[idx].fd(),
+                           rede::serializar(rede::MsgAtribuirTarefas{quantidade}));
+    } catch (const rede::ErroRede&) {
+        return false;  // envio falhou: nao contabiliza no total
+    }
+    // Envio confiavel (TCP): o worker vai aplicar. Contabiliza no total agora.
+    total_.fetch_add(quantidade, std::memory_order_relaxed);
+    return true;
+}
+
 // Agrega snapshots/<sid>/: exige UMA peca por worker conhecido. false se faltar
 // alguma (snapshot ainda em andamento, ou pasta de outro cluster).
 bool Coletor::agregar(comum::SnapshotId sid, ResultadoSnapshot& res) const {
@@ -109,7 +135,7 @@ bool Coletor::agregar(comum::SnapshotId sid, ResultadoSnapshot& res) const {
     res = ResultadoSnapshot{};
     res.id        = sid;
     res.iniciador = comum::snapshot_iniciador(sid);
-    res.total     = static_cast<long long>(total_);
+    res.total     = total_referencia(dir);
 
     for (const auto& w : workers_) {
         std::string caminho = dir + "/" + std::to_string(w.id) + ".json";

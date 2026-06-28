@@ -33,8 +33,8 @@ struct ConfigWorker {
 
     Endereco monitor_telemetria;  // destino UDP da telemetria (host:porta)
 
-    std::uint16_t   fator = 1;             // fator de clock (heterogeneidade)
-    Contagem        tarefas_iniciais = 0;  // tarefas com que este worker comeca
+    std::uint16_t   fator = 1;  // fator de clock (heterogeneidade)
+    // Sem carga inicial: as tarefas sao injetadas em runtime pelo Monitor.
 
     NodeId id() const { return escuta.porta; }
 };

@@ -17,8 +17,9 @@ namespace entidade {
 
 // Comando vindo do Monitor para a thread consumidora.
 struct Comando {
-    enum class Tipo { INICIAR_SNAPSHOT } tipo;
-    comum::SnapshotId snapshot_id = 0;
+    enum class Tipo { INICIAR_SNAPSHOT, ATRIBUIR_TAREFAS } tipo;
+    comum::SnapshotId snapshot_id = 0;  // INICIAR_SNAPSHOT
+    comum::Contagem   quantidade  = 0;  // ATRIBUIR_TAREFAS
 };
 
 class Controle {

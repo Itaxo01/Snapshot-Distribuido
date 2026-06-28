@@ -36,6 +36,7 @@ enum class TipoMsg : std::uint8_t {
     // --- Controle (TCP Monitor <-> worker) ------------------- faixa 0x1_
     INICIAR_SNAPSHOT = 0x10,  // Monitor -> worker iniciador
     PECA_SNAPSHOT    = 0x11,  // worker  -> Monitor (captura local serializada)
+    ATRIBUIR_TAREFAS = 0x12,  // Monitor -> worker: injeta carga em runtime
 
     // --- Telemetria (UDP worker -> Monitor; fire-and-forget) - faixa 0x2_
     TELE_ESTADO = 0x20,  // estado periodico (alimenta as barras)
@@ -52,6 +53,7 @@ enum class Evento : std::uint8_t {
     RECEBEU_MARCADOR   = 5,
     GRAVOU_CANAL       = 6,
     CONCLUIU_SNAPSHOT  = 7,
+    INJETOU_TAREFAS    = 8,  // recebeu carga injetada pelo Monitor (runtime)
 };
 
 // ---------------------------------------------------------------------------
@@ -82,6 +84,13 @@ struct MsgOla {
 // ---------------------------------------------------------------------------
 struct MsgIniciarSnapshot {
     comum::SnapshotId snapshot_id;  // atribuido pelo Monitor (que agrega)
+};
+
+// Injecao de carga em runtime: o Monitor manda este comando pela conexao de
+// controle do worker-alvo (a conexao identifica o alvo, nao ha id no corpo). O
+// worker soma 'quantidade' as suas tarefas pendentes na thread consumidora.
+struct MsgAtribuirTarefas {
+    comum::Contagem quantidade;
 };
 
 // RESERVADA. Na coleta atual (via filesystem) o worker publica a peca em arquivo
@@ -122,6 +131,7 @@ Buffer serializar(const MsgMarcador&);
 Buffer serializar(const MsgPedidoRoubo&);
 Buffer serializar(const MsgOla&);
 Buffer serializar(const MsgIniciarSnapshot&);
+Buffer serializar(const MsgAtribuirTarefas&);
 Buffer serializar(const MsgPecaSnapshot&);
 Buffer serializar(const MsgTeleEstado&);
 Buffer serializar(const MsgTeleEvento&);
@@ -135,6 +145,7 @@ std::optional<MsgMarcador>       parse_marcador(const Buffer& corpo);
 std::optional<MsgPedidoRoubo>    parse_pedido_roubo(const Buffer& corpo);
 std::optional<MsgOla>            parse_ola(const Buffer& corpo);
 std::optional<MsgIniciarSnapshot> parse_iniciar_snapshot(const Buffer& corpo);
+std::optional<MsgAtribuirTarefas> parse_atribuir_tarefas(const Buffer& corpo);
 std::optional<MsgPecaSnapshot>   parse_peca_snapshot(const Buffer& corpo);
 std::optional<MsgTeleEstado>     parse_tele_estado(const Buffer& corpo);
 std::optional<MsgTeleEvento>     parse_tele_evento(const Buffer& corpo);

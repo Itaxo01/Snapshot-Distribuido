@@ -117,6 +117,12 @@ Buffer serializar(const MsgIniciarSnapshot& m) {
     return b;
 }
 
+Buffer serializar(const MsgAtribuirTarefas& m) {
+    Buffer b = corpo_com_tipo(TipoMsg::ATRIBUIR_TAREFAS);
+    por_u32(b, m.quantidade);
+    return b;
+}
+
 Buffer serializar(const MsgPecaSnapshot& m) {
     Buffer b = corpo_com_tipo(TipoMsg::PECA_SNAPSHOT);
     por_u64(b, m.snapshot_id);
@@ -197,6 +203,15 @@ std::optional<MsgIniciarSnapshot> parse_iniciar_snapshot(const Buffer& corpo) {
     c.u8();
     MsgIniciarSnapshot m{};
     m.snapshot_id = c.u64();
+    if (!c.ok || !c.fim()) return std::nullopt;
+    return m;
+}
+
+std::optional<MsgAtribuirTarefas> parse_atribuir_tarefas(const Buffer& corpo) {
+    Cursor c(corpo);
+    c.u8();
+    MsgAtribuirTarefas m{};
+    m.quantidade = c.u32();
     if (!c.ok || !c.fim()) return std::nullopt;
     return m;
 }

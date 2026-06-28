@@ -37,7 +37,8 @@ Worker::Worker(comum::ConfigWorker cfg)
               [this](const snapshot::PecaLocal& p) { ao_completar(p); }),
       controle_(comum::Endereco{cfg.escuta.host, cfg.porta_controle}),
       telemetria_(cfg.monitor_telemetria) {
-    estado_.pendentes = cfg.tarefas_iniciais;
+    // Carga inicial e 0: as tarefas sao injetadas em runtime pelo Monitor
+    // (mensagem de controle ATRIBUIR_TAREFAS). Ver coletor_snapshot/ui_imgui.
 }
 
 // --- Bootstrap --------------------------------------------------------------
@@ -98,6 +99,11 @@ void Worker::drenar_comandos() {
         if (cmd->tipo == Comando::Tipo::INICIAR_SNAPSHOT) {
             engine_.iniciar(cmd->snapshot_id);
             evento(rede::Evento::INICIOU_SNAPSHOT, 0, 0, cmd->snapshot_id);
+        } else if (cmd->tipo == Comando::Tipo::ATRIBUIR_TAREFAS) {
+            // Injecao de carga em runtime: soma as pendentes (thread consumidora,
+            // sem corrida). Vira estado local visivel ao proximo snapshot.
+            estado_.pendentes += cmd->quantidade;
+            evento(rede::Evento::INJETOU_TAREFAS, 0, cmd->quantidade, 0);
         }
     }
 }

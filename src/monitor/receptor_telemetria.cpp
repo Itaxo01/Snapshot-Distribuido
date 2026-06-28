@@ -24,6 +24,7 @@ std::string formatar_evento(const rede::MsgTeleEvento& e) {
         case rede::Evento::RECEBEU_MARCADOR:  return w + " recebeu marcador de " + p + " (#" + sid + ")";
         case rede::Evento::GRAVOU_CANAL:      return w + " gravou canal de " + p;
         case rede::Evento::CONCLUIU_SNAPSHOT: return w + " concluiu snapshot #" + sid;
+        case rede::Evento::INJETOU_TAREFAS:   return w + " recebeu " + v + " tarefas injetadas";
     }
     return w + " evento desconhecido";
 }

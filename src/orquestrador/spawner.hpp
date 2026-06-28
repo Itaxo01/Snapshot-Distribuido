@@ -22,7 +22,6 @@ struct EspecNo {
     std::string                   host;           // bind/identidade na rede
     comum::Porta                  porta_controle;
     std::uint16_t                 fator;          // heterogeneidade
-    comum::Contagem               tarefas;        // carga inicial
     std::vector<comum::Endereco>  vizinhos;       // endpoints de negocio dos vizinhos
     comum::Endereco               monitor;        // destino UDP da telemetria
 };

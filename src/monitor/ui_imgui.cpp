@@ -88,8 +88,8 @@ void desenhar(ContextoUI& ctx) {
                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar |
                      ImGuiWindowFlags_NoBringToFrontOnFocus);
 
-    ImGui::Text("Snapshot Distribuido (Chandy-Lamport)   |   %s   |   total %u tarefas",
-                ctx.info.c_str(), ctx.total);
+    ImGui::Text("Snapshot Distribuido (Chandy-Lamport)   |   %s   |   total %u tarefas (injetadas)",
+                ctx.info.c_str(), ctx.coletor.total());
     ImGui::Separator();
 
     float larg_esq = ImGui::GetContentRegionAvail().x * 0.58f;
@@ -101,9 +101,10 @@ void desenhar(ContextoUI& ctx) {
         desenhar_workers(ctx.pausado ? ctx.congelado : ws);
 
         ImGui::SeparatorText("Soma global (leitura ingenua via UDP)");
+        long long total_ref = static_cast<long long>(ctx.coletor.total());
         long long mostra   = ctx.pausado ? ctx.soma_congelada : soma_viva;
-        long long deficit  = static_cast<long long>(ctx.total) - mostra;
-        bool      bate     = (mostra == static_cast<long long>(ctx.total));
+        long long deficit  = total_ref - mostra;
+        bool      bate     = (mostra == total_ref);
         ImGui::TextColored(bate ? ImVec4(0.4f, 1, 0.4f, 1) : ImVec4(1, 0.55f, 0.3f, 1),
                            "soma = %lld   (deficit %lld)%s", mostra, deficit,
                            ctx.pausado ? "   [CONGELADO]" : "");
@@ -131,10 +132,35 @@ void desenhar(ContextoUI& ctx) {
         ImGui::SameLine();
         ImGui::TextDisabled("congela a leitura; soma quase sempre != total (tarefas em transito)");
 
-        ImGui::SeparatorText("Snapshot consistente (Chandy-Lamport)");
+        // Lista de workers (compartilhada por injecao e disparo de snapshot).
         std::vector<comum::NodeId> ids;
         for (const auto& w : ctx.coletor.workers()) ids.push_back(w.id);
         if (ctx.iniciador_idx >= static_cast<int>(ids.size())) ctx.iniciador_idx = 0;
+        if (ctx.alvo_idx      >= static_cast<int>(ids.size())) ctx.alvo_idx      = 0;
+
+        ImGui::SeparatorText("Injetar carga (runtime)");
+        ImGui::SetNextItemWidth(120);
+        ImGui::InputInt("tarefas", &ctx.qtd_injetar, 1000, 10000);
+        if (ctx.qtd_injetar < 0) ctx.qtd_injetar = 0;
+        ImGui::SameLine();
+        ImGui::TextUnformatted("no:");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(90);
+        std::string alvo_atual = ids.empty() ? "-" : std::to_string(ids[ctx.alvo_idx]);
+        if (ImGui::BeginCombo("##alvo", alvo_atual.c_str())) {
+            for (int i = 0; i < static_cast<int>(ids.size()); ++i)
+                if (ImGui::Selectable(std::to_string(ids[i]).c_str(), i == ctx.alvo_idx))
+                    ctx.alvo_idx = i;
+            ImGui::EndCombo();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Injetar") && !ids.empty() && ctx.qtd_injetar > 0)
+            ctx.coletor.atribuir_tarefas(ids[ctx.alvo_idx],
+                                         static_cast<comum::Contagem>(ctx.qtd_injetar));
+        ImGui::SameLine();
+        ImGui::TextDisabled("injete e deixe assentar antes de capturar");
+
+        ImGui::SeparatorText("Snapshot consistente (Chandy-Lamport)");
 
         // Botao sempre habilitado: o disparo e fire-and-forget, varios snapshots
         // podem rodar ao mesmo tempo (snapshots concorrentes).

@@ -23,7 +23,6 @@ pid_t spawnar_no(const std::string& caminho_entidade, const EspecNo& spec) {
         "--host",     spec.host,
         "--controle", std::to_string(spec.porta_controle),
         "--fator",    std::to_string(spec.fator),
-        "--tarefas",  std::to_string(spec.tarefas),
         "--monitor",  endereco_str(spec.monitor),
     };
     for (const auto& v : spec.vizinhos) {

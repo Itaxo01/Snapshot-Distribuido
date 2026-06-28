@@ -142,3 +142,33 @@ ser **atômica** do ponto de vista do leitor — no FS é `write .tmp + rename`;
 atomicidade do PUT; no Kafka/etcd é a do *append*/escrita da chave. O algoritmo de
 Chandy–Lamport só produz os pedaços distribuídos; **a coleta é sempre uma camada de
 engenharia acima dele**.
+
+---
+
+## 5. Injeção de carga em runtime vs. snapshot: janela transitória
+
+**O que fizemos.** Os workers iniciam vazios e a carga é injetada em runtime pelo Monitor
+(comando de controle `ATRIBUIR_TAREFAS`). O Monitor mantém o **total de referência** do
+cluster como a soma do que foi injetado, e o usa na verificação de conservação
+(`soma == total`). Cada snapshot **congela** o total de referência no momento de sua
+agregação (o coletor agrega cada `id` uma única vez e o mantém em cache), e snapshots de
+execuções anteriores preservam o total persistido em seu `final_snapshot.json`.
+
+**A limitação.** A injeção viaja pela conexão de **controle** Monitor→worker, que **não**
+faz parte do grafo de negócio capturado pelo snapshot. Entre "o Monitor soma `X` ao total"
+e "o worker-alvo aplica `X` às suas pendentes" há uma pequena janela. Se um snapshot for
+capturado *exatamente* nessa janela, a tarefa injetada não está nem no estado local de
+nenhum nó nem em um canal capturado (está em trânsito na conexão de controle, invisível ao
+corte) — e o snapshot aparece **transitoriamente inconsistente** (`soma < total`).
+
+**Por que não é resolvido afunilando tudo numa fila.** O determinante é que injeção e
+marcador chegam ao worker por **conexões TCP distintas** (controle vs. negócio), e FIFO é
+*por-conexão*: não há ordenação causal entre "aplicar injeção" e "gravar o corte". Jogar
+ambas na mesma fila do consumidor não cria a ordenação que o transporte não deu. A correção
+robusta seria tratar a injeção como **mensagem de negócio que entra no grafo** (sujeita à
+disciplina de marcadores) ou tornar o Monitor um participante lógico cujos canais de
+controle sejam capturados — fora do escopo desta demonstração.
+
+**Mitigação adotada (pragmática).** Injete a carga e **deixe-a assentar** antes de capturar
+(as barras de telemetria refletem a aplicação em poucos milissegundos). Como cada snapshot
+congela seu total na agregação, capturar fora da janela de injeção sempre dá `soma == total`.

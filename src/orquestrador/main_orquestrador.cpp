@@ -4,9 +4,12 @@
 // encerramento aos filhos.
 //
 // Uso:
-//   orquestrador --workers N [--tarefas 100000] [--topologia ring|mesh]
+//   orquestrador --workers N [--topologia ring|mesh]
 //                [--porta-base 7001] [--controle-base 8001] [--telemetria 9000]
-//                [--host 127.0.0.1] [--distribuir] [--entidade <caminho>]
+//                [--host 127.0.0.1] [--entidade <caminho>]
+//
+// As tarefas NAO sao definidas aqui: todos os workers iniciam com 0 e a carga e
+// injetada em runtime pelo Monitor (mensagem de controle ATRIBUIR_TAREFAS).
 #include <linux/limits.h>  // PATH_MAX
 #include <csignal>
 #include <cstring>
@@ -41,9 +44,9 @@ void encerrar_filhos(int) {
 
 [[noreturn]] void uso(const char* prog) {
     std::cerr << "uso: " << prog
-              << " --workers N [--tarefas 100000] [--topologia ring|mesh]"
+              << " --workers N [--topologia ring|mesh]"
                  " [--porta-base 7001] [--controle-base 8001] [--telemetria 9000]"
-                 " [--host 127.0.0.1] [--distribuir] [--entidade <caminho>]\n";
+                 " [--host 127.0.0.1] [--entidade <caminho>]\n";
     std::exit(2);
 }
 
@@ -59,13 +62,11 @@ std::string dir_do_executavel() {
 
 struct Opcoes {
     int                     workers       = 0;
-    comum::Contagem         tarefas       = 100000;
     orquestrador::Topologia topologia     = orquestrador::Topologia::Anel;
     comum::Porta            porta_base    = 7001; // Porta worker <-> worker
     comum::Porta            controle_base = 8001; // Porta controle -> worker
     comum::Porta            telemetria    = 9000;
     std::string             host          = "127.0.0.1";
-    bool                    distribuir    = false;
     std::string             entidade;  // vazio = auto (mesmo dir do orquestrador)
 };
 
@@ -78,7 +79,6 @@ Opcoes parse(int argc, char** argv) {
             return argv[++i];
         };
         if (a == "--workers")             o.workers       = std::stoi(prox());
-        else if (a == "--tarefas")        o.tarefas       = static_cast<comum::Contagem>(std::stoul(prox()));
         else if (a == "--topologia") {
             std::string t = prox();
             o.topologia = (t == "mesh" || t == "malha") ? orquestrador::Topologia::Malha
@@ -88,7 +88,6 @@ Opcoes parse(int argc, char** argv) {
         else if (a == "--controle-base")  o.controle_base = static_cast<comum::Porta>(std::stoi(prox()));
         else if (a == "--telemetria")     o.telemetria    = static_cast<comum::Porta>(std::stoi(prox()));
         else if (a == "--host")           o.host          = prox();
-        else if (a == "--distribuir")     o.distribuir    = true;
         else if (a == "--entidade")       o.entidade      = prox();
         else { std::cerr << "argumento desconhecido: " << a << "\n"; uso(argv[0]); }
     }
@@ -96,29 +95,13 @@ Opcoes parse(int argc, char** argv) {
     return o;
 }
 
-// Carga inicial de cada no.
-std::vector<comum::Contagem> distribuir_tarefas(const Opcoes& o) {
-    std::vector<comum::Contagem> t(o.workers, 0);
-    if (!o.distribuir) {
-        t[0] = o.tarefas;  // tudo no no 0 (espalhamento dramatico por work-stealing)
-    } else {
-        comum::Contagem base = o.tarefas / o.workers;
-        comum::Contagem rem  = o.tarefas % o.workers;
-        for (int i = 0; i < o.workers; ++i)
-            t[i] = base + (static_cast<comum::Contagem>(i) < rem ? 1 : 0);
-    }
-    return t;
-}
-
-void escrever_cluster_json(const Opcoes& o, const std::vector<std::uint16_t>& fatores,
-                           const std::vector<comum::Contagem>& tarefas) {
+void escrever_cluster_json(const Opcoes& o, const std::vector<std::uint16_t>& fatores) {
     std::vector<std::string> ws;
     for (int i = 0; i < o.workers; ++i) {
         ws.push_back(comum::json::Escritor()
                          .numero("id", o.porta_base + i)
                          .numero("controle", o.controle_base + i)
                          .numero("fator", fatores[i])
-                         .numero("tarefas", tarefas[i])
                          .str());
     }
     std::string doc = comum::json::Escritor()
@@ -141,8 +124,7 @@ int main(int argc, char** argv) {
     std::string caminho_entidade =
         o.entidade.empty() ? dir_do_executavel() + "/entidade" : o.entidade;
 
-    auto adj     = orquestrador::construir_topologia(o.workers, o.topologia);
-    auto tarefas = distribuir_tarefas(o);
+    auto adj = orquestrador::construir_topologia(o.workers, o.topologia);
     std::vector<std::uint16_t> fatores(o.workers);
     for (int i = 0; i < o.workers; ++i)
         fatores[i] = static_cast<std::uint16_t>((i % 5) + 1);  // heterogeneidade
@@ -153,7 +135,7 @@ int main(int argc, char** argv) {
 
     std::cout << "orquestrador: " << o.workers << " workers, "
               << (o.topologia == orquestrador::Topologia::Anel ? "anel" : "malha")
-              << ", " << o.tarefas << " tarefas, telemetria UDP "
+              << ", tarefas injetadas em runtime, telemetria UDP "
               << o.host << ":" << o.telemetria << "\n";
 
     for (int i = 0; i < o.workers; ++i) {
@@ -162,7 +144,6 @@ int main(int argc, char** argv) {
         spec.host           = o.host;
         spec.porta_controle = static_cast<comum::Porta>(o.controle_base + i);
         spec.fator          = fatores[i];
-        spec.tarefas        = tarefas[i];
         spec.monitor        = {o.host, o.telemetria};
         for (int j : adj[i])
             spec.vizinhos.push_back({o.host, static_cast<comum::Porta>(o.porta_base + j)});
@@ -171,7 +152,7 @@ int main(int argc, char** argv) {
             pid_t pid = orquestrador::spawnar_no(caminho_entidade, spec);
             g_pids[g_npids.fetch_add(1)] = pid;
             std::cout << "  no " << spec.id << " (controle " << spec.porta_controle
-                      << ", fator " << spec.fator << ", tarefas " << spec.tarefas
+                      << ", fator " << spec.fator
                       << ", vizinhos " << spec.vizinhos.size() << ") pid " << pid << "\n";
         } catch (const std::exception& e) {
             std::cerr << "falha ao lancar no " << spec.id << ": " << e.what() << "\n";
@@ -180,7 +161,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    escrever_cluster_json(o, fatores, tarefas);
+    escrever_cluster_json(o, fatores);
     std::cout << "cluster.json escrito. Ctrl-C encerra todos os workers.\n";
 
     // Aguarda os filhos; reapa ate todos sairem (ex.: apos Ctrl-C -> SIGTERM).

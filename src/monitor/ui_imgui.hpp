@@ -14,7 +14,6 @@ namespace monitor {
 struct ContextoUI {
     EstadoCluster&  estado;
     Coletor&        coletor;
-    comum::Contagem total;
     std::string     info;  // ex.: "4 workers"
 
     // estado interno da UI
@@ -22,6 +21,8 @@ struct ContextoUI {
     std::map<comum::NodeId, EstadoWorker> congelado;       // leitura congelada no pause
     long long                             soma_congelada = 0;
     int                                   iniciador_idx  = 0;
+    int                                   alvo_idx       = 0;     // worker p/ injetar
+    int                                   qtd_injetar    = 10000; // tarefas a injetar
 };
 
 void desenhar(ContextoUI& ctx);

@@ -4,6 +4,7 @@ project(snapshot_distribuido CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(Threads REQUIRED)
 
@@ -39,6 +40,7 @@ add_executable(entidade
     src/entidade/work_stealing.cpp
     src/entidade/controle.cpp
 )
+target_include_directories(entidade PUBLIC src)
 target_link_libraries(entidade PRIVATE snapshot)
 
 # ---------------------------------------------------------------------------

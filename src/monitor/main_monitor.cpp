@@ -28,7 +28,6 @@ namespace {
 struct ClusterInfo {
     std::string                       host;
     comum::Porta                      telemetria = 0;
-    comum::Contagem                   total      = 0;
     std::vector<monitor::EndpointCtrl> endpoints;
 };
 
@@ -46,7 +45,6 @@ ClusterInfo carregar_cluster(const std::string& caminho) {
     for (auto& w : v->campo("workers")->arr) {
         comum::NodeId id    = static_cast<comum::NodeId>(w.campo("id")->inteiro());
         comum::Porta  ctrl  = static_cast<comum::Porta>(w.campo("controle")->inteiro());
-        c.total += static_cast<comum::Contagem>(w.campo("tarefas")->inteiro());
         c.endpoints.push_back({id, {c.host, ctrl}});
     }
     return c;
@@ -104,11 +102,11 @@ int main(int argc, char** argv) {
     monitor::ReceptorTelemetria receptor(cluster.telemetria, estado);
     receptor.iniciar();
 
-    monitor::Coletor coletor(cluster.endpoints, cluster.total);
+    monitor::Coletor coletor(cluster.endpoints);
     coletor.conectar();  // conecta nas portas de controle (com retry)
     coletor.iniciar();
 
-    monitor::ContextoUI ctx{estado, coletor, cluster.total,
+    monitor::ContextoUI ctx{estado, coletor,
                             std::to_string(cluster.endpoints.size()) + " workers"};
 
     while (!glfwWindowShouldClose(janela)) {

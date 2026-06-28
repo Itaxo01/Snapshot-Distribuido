@@ -2,15 +2,16 @@
 # Compila (se preciso), sobe o cluster (orquestrador + workers) e abre o Monitor.
 # Fechar a janela do Monitor -- ou Ctrl-C -- encerra TODOS os processos.
 #
+# As tarefas sao injetadas em runtime pelo Monitor (nao ha mais carga fixa).
+#
 # Variaveis de ambiente (opcionais):
-#   WORKERS=4  TAREFAS=100000  TOPOLOGIA=ring   (ex.: WORKERS=6 ./run.sh)
+#   WORKERS=4  TOPOLOGIA=ring   (ex.: WORKERS=6 ./run.sh)
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$DIR"
 
 WORKERS="${WORKERS:-12}"
-TAREFAS="${TAREFAS:-100000}"
 TOPOLOGIA="${TOPOLOGIA:-mesh}"
 
 ORQ="$DIR/build/bin/orquestrador"
@@ -34,8 +35,8 @@ trap cleanup EXIT INT TERM
 [ -z "${DISPLAY:-}" ] && echo "[aviso] DISPLAY nao definido; o Monitor precisa de um display grafico."
 
 # 2) Orquestrador: spawna os workers e escreve cluster.json.
-echo ">> orquestrador: $WORKERS workers, $TAREFAS tarefas, topologia $TOPOLOGIA"
-"$ORQ" --workers "$WORKERS" --tarefas "$TAREFAS" --topologia "$TOPOLOGIA" &
+echo ">> orquestrador: $WORKERS workers, topologia $TOPOLOGIA (injete tarefas no Monitor)"
+"$ORQ" --workers "$WORKERS" --topologia "$TOPOLOGIA" &
 ORQ_PID=$!
 
 # Espera o cluster.json e os canais subirem.

@@ -58,7 +58,7 @@ struct ResultadoSnapshot {
 
 class Coletor {
 public:
-    Coletor(std::vector<EndpointCtrl> workers, comum::Contagem total);
+    explicit Coletor(std::vector<EndpointCtrl> workers);
     ~Coletor();
 
     Coletor(const Coletor&) = delete;
@@ -71,6 +71,14 @@ public:
     // Dispara um snapshot (assincrono, nao bloqueia). Retorna o id atribuido.
     comum::SnapshotId disparar(comum::NodeId iniciador);
 
+    // Injeta 'quantidade' tarefas no worker 'alvo' (mensagem de controle) e soma
+    // ao total de referencia do cluster. Retorna false se o alvo nao existe ou o
+    // envio falhar (nesse caso o total NAO e alterado).
+    bool atribuir_tarefas(comum::NodeId alvo, comum::Contagem quantidade);
+
+    // Total de tarefas injetadas ate agora (referencia da conservacao).
+    comum::Contagem total() const { return total_.load(std::memory_order_relaxed); }
+
     const std::vector<EndpointCtrl>& workers() const { return workers_; }
 
     // Resultados completos, separados por origem (mais recentes primeiro).
@@ -78,13 +86,14 @@ public:
     std::vector<ResultadoSnapshot> resultados_anteriores() const;
 
 private:
-    void varrer_uma_vez();
-    bool agregar(comum::SnapshotId, ResultadoSnapshot& fora) const;
-    int  indice_de(comum::NodeId) const;
+    void      varrer_uma_vez();
+    bool      agregar(comum::SnapshotId, ResultadoSnapshot& fora) const;
+    long long total_referencia(const std::string& dir) const;
+    int       indice_de(comum::NodeId) const;
 
-    std::vector<EndpointCtrl> workers_;
-    comum::Contagem           total_;
-    std::vector<rede::Socket> conns_;  // paralelo a workers_
+    std::vector<EndpointCtrl>    workers_;
+    std::atomic<comum::Contagem> total_{0};  // tarefas injetadas em runtime
+    std::vector<rede::Socket>    conns_;      // paralelo a workers_
     std::uint32_t             seq_ = 0;
 
     std::thread       th_;

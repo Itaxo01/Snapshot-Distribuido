@@ -3,7 +3,7 @@
 //
 // Uso:
 //   entidade --id <porta_negocio> [--host <bind=127.0.0.1>]
-//            --controle <porta_controle> --fator <n> --tarefas <n>
+//            --controle <porta_controle> --fator <n>
 //            --monitor <host:porta> [--vizinho <host:porta>]...
 #include <atomic>
 #include <csignal>
@@ -25,7 +25,7 @@ void ao_sinal(int) {
 [[noreturn]] void uso(const char* prog) {
     std::cerr << "uso: " << prog
               << " --id <porta> [--host <bind>] --controle <porta>"
-                 " --fator <n> --tarefas <n> --monitor <host:porta>"
+                 " --fator <n> --monitor <host:porta>"
                  " [--vizinho <host:porta>]...\n";
     std::exit(2);
 }
@@ -51,7 +51,6 @@ comum::ConfigWorker parse_args(int argc, char** argv) {
         else if (a == "--host")     cfg.escuta.host      = prox();
         else if (a == "--controle") cfg.porta_controle   = static_cast<comum::Porta>(std::stoi(prox()));
         else if (a == "--fator")    cfg.fator            = static_cast<std::uint16_t>(std::stoi(prox()));
-        else if (a == "--tarefas")  cfg.tarefas_iniciais = static_cast<comum::Contagem>(std::stoul(prox()));
         else if (a == "--monitor")  cfg.monitor_telemetria = parse_endereco(prox());
         else if (a == "--vizinho")  cfg.vizinhos.push_back(parse_endereco(prox()));
         else { std::cerr << "argumento desconhecido: " << a << "\n"; uso(argv[0]); }

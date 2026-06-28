@@ -9,9 +9,11 @@ processos independentes comunicam-se por **Berkeley Sockets** (TCP e UDP).
 
 ## 1. Visão geral
 
-A aplicação simula um **cluster heterogêneo** que processa um lote fechado de tarefas.
-Os nós (*workers*) fazem **balanceamento de carga por *work-stealing***: transferem lotes
-de tarefas entre si dinamicamente, sem um coordenador central.
+A aplicação simula um **cluster heterogêneo** que processa tarefas. Os workers iniciam
+**vazios** (0 tarefas) e a carga é **injetada em runtime** pelo Monitor — você escolhe o
+nó e quantas tarefas enviar, quando quiser. Os nós (*workers*) fazem **balanceamento de
+carga por *work-stealing***: transferem lotes de tarefas entre si dinamicamente, sem um
+coordenador central.
 
 Por causa dessa comunicação constante, tentar observar "quantas tarefas existem no
 sistema" somando o estado de cada nó **quase nunca dá o valor correto** — sempre há
@@ -22,7 +24,7 @@ O **Snapshot Distribuído** resolve isso: ele captura um **estado global consist
 sistema. Com ele demonstramos duas aplicações:
 
 - **Conservação:** a soma de tarefas (`pendentes + concluídas + em trânsito`) é sempre
-  igual ao total inicial. Uma leitura ingênua erra; o snapshot acerta.
+  igual ao total **injetado**. Uma leitura ingênua erra; o snapshot acerta.
 - **Detecção de término:** o sistema só terminou quando **nenhum** nó tem tarefas
   pendentes **e nenhum** canal tem tarefas em trânsito — algo que a leitura ingênua
   (todos "ociosos") pode declarar cedo demais.
@@ -42,7 +44,7 @@ Três executáveis independentes:
 **Comunicação (Berkeley Sockets):**
 - **TCP peer-to-peer** entre workers: tarefas e **marcadores** do Chandy–Lamport (na
   mesma conexão, preservando a ordem FIFO exigida pelo algoritmo).
-- **TCP de controle** Monitor → worker: comando de iniciar snapshot.
+- **TCP de controle** Monitor → worker: comandos de iniciar snapshot e de injetar tarefas.
 - **UDP** worker → Monitor: telemetria *fire-and-forget* (não bloqueia a rede de negócio).
 
 As peças de snapshot são publicadas em arquivo (`snapshots/<id>/<no>.json`) e agregadas
@@ -94,12 +96,14 @@ Compila (se necessário), sobe o cluster e abre o Monitor. Fechar a janela do Mo
 Parâmetros do cenário podem ser passados por variáveis de ambiente:
 
 ```bash
-WORKERS=6 TAREFAS=100000 TOPOLOGIA=mesh ./run.sh
+WORKERS=6 TOPOLOGIA=mesh ./run.sh
 ```
 
 - `WORKERS` — número de workers (use **≥ 3**)
-- `TAREFAS` — total de tarefas do lote
 - `TOPOLOGIA` — `mesh` (todos conectados) ou `ring` (anel)
+
+As tarefas **não** são parâmetro de inicialização — injete-as pelo Monitor em runtime
+(ver seção 6).
 
 ### Forma manual (dois terminais)
 
@@ -107,7 +111,7 @@ Rode os dois **no mesmo diretório** (eles compartilham `cluster.json` e `snapsh
 
 ```bash
 # Terminal 1 — sobe o cluster e escreve cluster.json
-./build/bin/orquestrador --workers 6 --tarefas 100000 --topologia mesh
+./build/bin/orquestrador --workers 6 --topologia mesh
 
 # Terminal 2 — abre o Monitor (lê cluster.json)
 ./build/bin/monitor cluster.json
@@ -119,15 +123,15 @@ Rode os dois **no mesmo diretório** (eles compartilham `cluster.json` e `snapsh
 
 ```
 --workers N            (obrigatório) número de workers
---tarefas 100000       total de tarefas do lote
 --topologia ring|mesh  topologia de comunicação (padrão: ring)
 --porta-base 7001      porta TCP de negócio do 1º worker (= identidade)
 --controle-base 8001   porta TCP de controle do 1º worker
 --telemetria 9000      porta UDP de telemetria do Monitor
 --host 127.0.0.1       host de bind/roteamento
---distribuir           distribui a carga entre os nós (padrão: tudo no nó 0)
 --entidade <caminho>   caminho do binário entidade (padrão: mesmo diretório)
 ```
+
+Os workers iniciam com **0 tarefas**; a carga é injetada em runtime pelo Monitor.
 
 O `entidade` **não** é executado à mão — o orquestrador o lança com os argumentos corretos.
 
@@ -137,6 +141,9 @@ O `entidade` **não** é executado à mão — o orquestrador o lança com os ar
 
 Na janela do Monitor:
 
+- **Injetar carga (runtime):** escolha um worker, um número de tarefas e clique em
+  **`Injetar`**. O total do cluster cresce de acordo, e as barras daquele nó sobem. É a
+  forma de "alimentar" o sistema — os workers começam vazios.
 - **Barras por worker:** tarefas pendentes/concluídas e o fator de processamento (`xN`).
 - **Soma global (UDP):** a leitura ingênua do sistema. Repare que ela quase sempre fica
   **abaixo** do total — o déficit são as tarefas em trânsito.
@@ -149,9 +156,14 @@ Na janela do Monitor:
   anteriores encontrados na pasta. O disparo é *não bloqueante* — vários snapshots podem
   rodar ao mesmo tempo.
 
-**Roteiro sugerido:** deixe o sistema rodando, clique em **Pausar** e observe a soma
-incorreta; depois clique em **Capturar Snapshot** e observe a soma exata. Espere o lote
-drenar e capture de novo para ver o status mudar para **TERMINADO**.
+**Roteiro sugerido:** **injete** uma carga grande em um nó (ex.: 100000 no worker 7001) e
+deixe assentar um instante; clique em **Pausar** e observe a soma incorreta; depois clique
+em **Capturar Snapshot** e observe a soma exata (`== total`). Espere o lote drenar e
+capture de novo para ver o status mudar para **TERMINADO**.
+
+> **Nota:** injete a carga e deixe-a assentar **antes** de capturar. A injeção viaja pelo
+> canal de controle (fora do grafo capturado pelo snapshot); capturar no exato instante de
+> uma injeção pode mostrar uma inconsistência transitória. Ver `Limitacoes.md`.
 
 ---
 
@@ -175,3 +187,7 @@ O `<id>` é o identificador do snapshot (codifica o nó iniciador).
 - **Comportamento e ritmo** (atraso simulado de rede, velocidade de processamento,
   política de *work-stealing*, escala da interface): constantes centralizadas em
   [`src/comum/parametros.hpp`](src/comum/parametros.hpp). Após alterar, recompile.
+
+## Links para o Github e vídeo gravado
+https://github.com/Itaxo01/Snapshot-Distribuido
+https://youtu.be/C8WlWTu4JAY
