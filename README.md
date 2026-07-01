@@ -188,6 +188,12 @@ O `<id>` é o identificador do snapshot (codifica o nó iniciador).
   política de *work-stealing*, escala da interface): constantes centralizadas em
   [`src/comum/parametros.hpp`](src/comum/parametros.hpp). Após alterar, recompile.
 
-## Links para o Github e vídeo gravado
+## Links
+### Github
 https://github.com/Itaxo01/Snapshot-Distribuido
-https://youtu.be/C8WlWTu4JAY
+
+### Youtube (Vídeo da demo)
+https://youtu.be/C8WlWTu4JAY 
+
+### Slides
+https://docs.google.com/presentation/d/1ZJTZOmKVGtz_ypb6qDZ31V7YXVKQYHIXCDWzHXEE2S8/edit?usp=sharing 

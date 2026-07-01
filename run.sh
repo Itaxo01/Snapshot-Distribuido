@@ -11,7 +11,7 @@ set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$DIR"
 
-WORKERS="${WORKERS:-12}"
+WORKERS="${WORKERS:-10}"
 TOPOLOGIA="${TOPOLOGIA:-mesh}"
 
 ORQ="$DIR/build/bin/orquestrador"

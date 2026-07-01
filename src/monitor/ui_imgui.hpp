@@ -22,7 +22,7 @@ struct ContextoUI {
     long long                             soma_congelada = 0;
     int                                   iniciador_idx  = 0;
     int                                   alvo_idx       = 0;     // worker p/ injetar
-    int                                   qtd_injetar    = 10000; // tarefas a injetar
+    int                                   qtd_injetar    = 100000; // tarefas a injetar
 };
 
 void desenhar(ContextoUI& ctx);
